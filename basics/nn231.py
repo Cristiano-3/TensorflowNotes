@@ -27,7 +27,7 @@ x = tf.placeholder(tf.float32, shape=[None, 2], name='x-input')
 y_ = tf.placeholder(tf.float32, shape=[None, 1], name='y-input')
 
 # forward
-a = tf.add(tf.matmul(x, w1), bias1)
+a = tf.add(tf.matmul(x, w1), bias1)  # now, no activation is used
 y = tf.add(tf.matmul(a, w2), bias2)
 
 # output sigmoid
