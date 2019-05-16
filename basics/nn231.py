@@ -4,6 +4,8 @@ import numpy as np
 from numpy.random import RandomState
 import matplotlib.pyplot as plt
 
+# network:2-3-1, 实现线性2分类
+
 # prepare data
 rdm = RandomState(1)
 dataset_size = 128
