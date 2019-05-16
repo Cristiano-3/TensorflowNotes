@@ -71,6 +71,7 @@ with tf.Session() as sess:
     print(sess.run(w1))
     print(sess.run(w2))
 
+    # show result
     for i in range(dataset_size):
         if Y[i][0] == 1:
             plt.scatter(X[i,0], X[i,1], c='b', marker='o')
