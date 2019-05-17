@@ -75,9 +75,10 @@ def train(mnist):
     y_average = inference(x, ema, weights1, biases1, weights2, biases2)
 
     # STEP: 2, loss -----------------------------------------------------------------
-    # loss 计算
+    # loss 计算, 别忘了softmax
+    # 另外自己实现交叉熵, log前别忘了clip, 因为可能出现log(0)
     cross_entropy = tf.reduce_mean(
-        tf.reduce_sum(-y_ * tf.log(tf.nn.softmax(y)), axis=1))  # old-style: reduction_indices=[1]
+        tf.reduce_sum(-y_ * tf.log(tf.clip_by_value(tf.nn.softmax(y), 1e-10, 1.0)), axis=1))  # old-style: reduction_indices=[1]
     # cross_entropy = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=y, labels=tf.argmax(y_, 1)))
 
     # regularization 计算
@@ -122,8 +123,8 @@ def train(mnist):
         for i in range(TRAINING_STEPS):
             # validate
             if i % 1000 == 0:
-                validate_acc = sess.run(accuracy, feed_dict=validate_feed)
-                print("After %d training step(s), validation accuracy using average model is %g " % (i, validate_acc))
+                validate_acc, validate_loss = sess.run([accuracy, loss], feed_dict=validate_feed)
+                print("After %d training step(s), validation accuracy using average model is %g, loss is %g " % (i, validate_acc, validate_loss))
 
             xs, ys = mnist.train.next_batch(BATCH_SIZE)
             sess.run(train_op, feed_dict={x: xs, y_: ys})
@@ -163,4 +164,12 @@ After 2000 training step(s), validation accuracy using average model is 0.0958
 After 3000 training step(s), validation accuracy using average model is 0.0958 
 After 4000 training step(s), validation accuracy using average model is 0.0958 
 After 5000 training step(s), validation accuracy using average model is 0.0958
+
+打印出Loss, 发现出现了nan
+log()计算前, 进行clip就好了
+-------------------------
+After 0 training step(s), validation accuracy using average model is 0.104, loss is 2.87783 
+After 1000 training step(s), validation accuracy using average model is 0.0958, loss is nan 
+After 2000 training step(s), validation accuracy using average model is 0.0958, loss is nan 
+After 3000 training step(s), validation accuracy using average model is 0.0958, loss is nan 
 '''    
