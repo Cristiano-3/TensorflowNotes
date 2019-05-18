@@ -172,4 +172,12 @@ After 0 training step(s), validation accuracy using average model is 0.104, loss
 After 1000 training step(s), validation accuracy using average model is 0.0958, loss is nan 
 After 2000 training step(s), validation accuracy using average model is 0.0958, loss is nan 
 After 3000 training step(s), validation accuracy using average model is 0.0958, loss is nan 
+
+
+对 y_average 的理解
+-------------------------
+y_average 的 inference 过程使用了EMA维护的影子变量, 
+但 y_average 只在预测时使用, 并不用于训练, 实际训练过程用的是没有滑动平均的 y, 
+所以, 相比正常训练, 滑动平均只是额外维护了一个"滑动平均模型", ema.apply,
+在 y_average 中调用 ema.average 才实际使用了滑动平均;
 '''    
