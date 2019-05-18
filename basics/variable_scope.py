@@ -11,6 +11,7 @@ w1 = tf.Variable([1], name="w")
 print(w1.name, w1.value)
 
 
+# tf.get_variable, 默认reuse=False, 不能重名
 v1 = tf.get_variable("v", shape=[1])  # 未指定 initializer;
 print(v1.name, v1.value)              # v:0, 当操作有多个输出便会有<op>:0, <op>::1, <op>:2, ...
 #v2 = tf.get_variable("v", shape=[1]) , 会报错 ValueError: Variable v already exists, disallowed.
