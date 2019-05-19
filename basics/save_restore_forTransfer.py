@@ -1,4 +1,4 @@
-# coding:utf-8
+# coding: utf-8
 import tensorflow as tf 
 from tensorflow.python.framework import graph_util
 
