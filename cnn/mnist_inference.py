@@ -2,6 +2,8 @@
 import tensorflow as tf 
 
 # network-structure params
+IMAGE_SIZE = 28
+NUM_CHANNELS = 1
 INPUT_NODE = 784
 OUTPUT_NODE = 10
 LAYER1_NODE = 500

@@ -1,5 +1,6 @@
 # coding: utf-8
 import os
+import numpy as np 
 import tensorflow as tf 
 from tensorflow.examples.tutorials.mnist import input_data
 
@@ -20,7 +21,13 @@ MODEL_NAME = 'model.ckpt'
 
 def train(mnist):
     # input placeholders
-    x = tf.placeholder(tf.float32, [None, mnist_inference.INPUT_NODE], name='x-inputs')
+    x = tf.placeholder(
+        tf.float32, 
+        [BATCH_SIZE, 
+        mnist_inference.IMAGE_SIZE, 
+        mnist_inference.IMAGE_SIZE, 
+        mnist_inference.NUM_CHANNELS], 
+        name='x-inputs')
     y_ = tf.placeholder(tf.float32, [None, mnist_inference.OUTPUT_NODE], name='y-inputs')
 
     # inference
@@ -66,9 +73,13 @@ def train(mnist):
         for i in range(TRAINING_STEPS):
             # batch
             xs, ys = mnist.train.next_batch(BATCH_SIZE)
+            reshaped_xs = np.reshape(xs, (BATCH_SIZE, 
+                                          mnist_inference.IMAGE_SIZE,
+                                          mnist_inference.IMAGE_SIZE,
+                                          mnist_inference.NUM_CHANNELS))
 
             # train a step
-            _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: xs, y_: ys})
+            _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: reshaped_xs, y_: ys})
 
             # infos
             if i % 1000 == 0:
