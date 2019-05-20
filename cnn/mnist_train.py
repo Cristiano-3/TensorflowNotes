@@ -23,16 +23,16 @@ def train(mnist):
     # input placeholders
     x = tf.placeholder(
         tf.float32, 
-        [BATCH_SIZE, 
+        [None, 
         mnist_inference.IMAGE_SIZE, 
         mnist_inference.IMAGE_SIZE, 
         mnist_inference.NUM_CHANNELS], 
         name='x-inputs')
-    y_ = tf.placeholder(tf.float32, [None, mnist_inference.OUTPUT_NODE], name='y-inputs')
+    y_ = tf.placeholder(tf.float32, [None, mnist_inference.NUM_LABELS], name='y-inputs')
 
     # inference
     regularizer = tf.contrib.layers.l2_regularizer(REGULARIZATION_RATE)
-    y = mnist_inference.inference(x, regularizer)
+    y = mnist_inference.inference(x, True, regularizer)
 
     # ema 
     global_step = tf.Variable(0, trainable=False)  # 随step衰减的地方会用到(ema, lr)

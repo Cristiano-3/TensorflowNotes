@@ -14,12 +14,17 @@ def evaluate(mnist):
     with tf.Graph().as_default() as g:
         # ---------------------------------
         # input placeholders
-        x = tf.placeholder(tf.float32, [None, mnist_inference.INPUT_NODE], name='x-input')
-        y_ = tf.placeholder(tf.float32, [None, mnist_inference.OUTPUT_NODE], name='y-input')
+        x = tf.placeholder(tf.float32, 
+                           [None, 
+                           mnist_inference.IMAGE_SIZE,
+                           mnist_inference.IMAGE_SIZE,
+                           mnist_inference.NUM_CHANNELS], name='x-input')
+        y_ = tf.placeholder(tf.float32, [None, mnist_inference.NUM_LABELS], name='y-input')
 
         # 这里是测试的 inference, 不用regularizer
-        y = mnist_inference.inference(x, None)
-
+        print('++++++++++ 1')
+        y = mnist_inference.inference(x, False, None)
+        print('++++++++++ 2')
         # 计算正确率
         prediction = tf.argmax(y, 1)
         correct_prediction = tf.equal(prediction, tf.argmax(y_, 1))
@@ -37,8 +42,14 @@ def evaluate(mnist):
         
         # ---------------------------------
         # validate dataset
-        validate_feed = {x: mnist.validation.images, 
-                         y_: mnist.validation.labels}
+        reshaped_images = np.reshape(mnist.validation.images, 
+                                     (mnist.validation.num_examples, 
+                                     mnist_inference.IMAGE_SIZE,
+                                     mnist_inference.IMAGE_SIZE,
+                                     mnist_inference.NUM_CHANNELS))
+
+        validate_feed = {x: reshaped_images[:10], 
+                         y_: mnist.validation.labels[:10]}
 
         while True:
             with tf.Session() as sess:
